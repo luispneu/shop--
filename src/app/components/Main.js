@@ -9,6 +9,7 @@ export default function Main() {
   const [listProduct, setProduct] = useState([]);
   const [listComplete, setlistComplete] = useState([]);
   const [textSearch, setTextSearch] = useState("");
+ 
 
 
 
@@ -17,48 +18,62 @@ export default function Main() {
       const response = await fetch("https://fakestoreapi.com/products");
       const data = await response.json();
       setProduct(data);
+      setlistComplete(data);
     }
     getProduct();
   }, []);
+
   const orderAz=() =>{
   const listAux = [...listProduct].sort((a, b) =>
     a.title.localeCompare(b.title));
     setProduct(listAux)
   }
+
   const Search = (text) => {
     setTextSearch(text);
-    if (text == "")  {
-      setlistProduct(listComplete);
+    if (text.trim() == "")  {
+      setProduct(listComplete);
       return
     }
+
+  const newList = listProduct.filter ((product) => 
+   product.title.toUpperCase(). trim().includes(textSearch.toUpperCase()));
+   setProduct(newList);
   }
 
-  const orderZa=() =>{
-    const listAux =[...listProduct].sort((a,b)=>
+  const orderZa = () =>{
+    let listAux =[...listProduct].sort((a,b)=>
     a.title.localeCompare(b.title) );
     listAux = listAux.reverse();
     setProduct(listProduct);
   }
+
   const ordeP=() =>{
     const listAux =[...listProduct].sort((a,b)=>
     a.price.localeCompare(b.price) );
     setProduct(listAux)
   }
+
   const ordePRV=() =>{
-    const listAux =[...listProduct].sort((a,b)=>
+    let listAux =[...listProduct].sort((a,b)=>
     a.price.localeCompare(b.price) );
     listAux = listAux.reverse();
-    setProduct(listProduct);
+    setlistProduct(listAux);
   }
-  if (listProduct[0]== null){
-    return <Spinner/>
+
+  if (listComplete[0]== null){
+    return(
+      <main className={style.main}>
+    <Spinner/>
+    </main>
+    ) 
   }
   return (
     <>
       <div className={"styles.filter"}>
-      <input type="text" value={TextSearch}
+      <input type="text" value={textSearch}
           placeholder="Pesquise um produto"
-          onChange={(event) =>} />
+          onChange={(event) => Search(event.target.value)} />
         <div>
         <button onClick={ordePRV}></button>
         <button onClick={ordeP}></button>
